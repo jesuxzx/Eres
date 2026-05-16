@@ -1,0 +1,245 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eres</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <audio id="background-music" loop>
+        <source src="https://github.com/jesuxzx/M-sicaaaa/raw/9a38369dc00a80c6d08b798ff7fe7797dba3c971/The%20Mar%C3%ADas%20-%20Cari%C3%B1o%20-%20The%20Mar%C3%ADas.mp3" type="audio/mp3">
+    </audio>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, StrictMode } = React;
+        const { createRoot } = ReactDOM;
+
+        const StarBackground = () => (
+            <div className="absolute inset-0 overflow-hidden">
+                {Array.from({ length: 120 }).map((_, i) => (
+                    <div
+                        key={i}
+                        className="absolute bg-white rounded-full animate-twinkle"
+                        style={{
+                            width: `${Math.random() * 2 + 1}px`,
+                            height: `${Math.random() * 2 + 1}px`,
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 5}s`,
+                            animationDuration: `${Math.random() * 3 + 2}s`,
+                            opacity: Math.random() * 0.8 + 0.2,
+                        }}
+                    ></div>
+                ))}
+            </div>
+        );
+
+        const NeonButton = ({ onClick, children }) => (
+            <button
+                onClick={onClick}
+                className="relative px-10 py-5 text-xl font-light tracking-widest text-white uppercase bg-transparent border border-white rounded-full overflow-hidden transition-all duration-700 hover:bg-white hover:text-black hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] active:scale-95"
+            >
+                <span className="relative z-10">{children}</span>
+            </button>
+        );
+
+        const StoryPage = ({ pageContent, onNext, onFinish, isLastPage, buttonText }) => (
+            <div className="relative p-10 md:p-16 bg-white bg-opacity-5 backdrop-blur-sm rounded-3xl shadow-2xl max-w-2xl mx-auto text-center text-white border border-white border-opacity-20 animate-fade-in-up font-serif">
+                {Array.from({ length: 10 }).map((_, i) => (
+                    <div
+                        key={i}
+                        className="absolute text-red-400 text-xl animate-flower-fall opacity-0"
+                        style={{
+                            left: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 5}s`,
+                            animationDuration: `${Math.random() * 12 + 6}s`,
+                            top: `-20px`,
+                        }}
+                    >
+                        ♥
+                    </div>
+                ))}
+                <div className="relative z-10">
+                    <p className="text-xl md:text-2xl leading-relaxed mb-10 italic font-light tracking-wide">
+                        {pageContent}
+                    </p>
+                    <div className="flex justify-center">
+                        <button
+                            onClick={isLastPage ? onFinish : onNext}
+                            className="px-8 py-3 text-sm tracking-widest uppercase border-b border-white hover:border-red-400 hover:text-red-400 transition-all duration-300"
+                        >
+                            {buttonText}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const App = () => {
+            const [showStory, setShowStory] = useState(false);
+            const [currentPage, setCurrentPage] = useState(0);
+            const [showLoveRain, setShowLoveRain] = useState(false);
+            const [lovePhrases, setLovePhrases] = useState([]);
+            const audioRef = useRef(null);
+
+            const storyContent = [
+                "A veces el universo se toma su tiempo para alinear las estrellas, como si supiera que lo más hermoso no puede apresurarse. Aquí, entre el silencio y la espera, imagino el momento en que tu luz, tan hermosa, finalmente coincida con la mía.",
+                "He guardado suspiros en frascos de cristal y poemas en los pliegues del viento, esperando el día en que tus pasos encuentren el camino hacia este rincón que ya se siente tuyo, aunque aún no hayas llegado.",
+                "No te busco con prisa, te espero con certeza. Porque sé que una presencia como la tuya no es una coincidencia, sino un destino escrito con tinta de luna y el brillo deslumbrante de tus ojitos bellos.",
+                "Dicen que la belleza se manifiesta de muchas formas, pero yo sé que la verdadera magia aparecerá cuando tu risa rompa el silencio de mis noches y tu mirada me cuente historias que aún no hemos vivido.",
+                "Mientras tanto, sigo bordando sueños con hilos de esperanza, sabiendo que cada segundo de espera valdrá la pena en el instante en que el mundo se detenga porque tú estás aquí.",
+                "Eres el sueño del que no quiero despertar, la melodía que aún no escucho pero que ya reconozco, y la persona que le da sentido a cada latido impaciente de mi corazón. Te espero, siempre.",
+                "A veces miro el cielo y me pregunto si tú también estarás observando la misma estrella, preguntándote cuándo el azar decidirá que ya es hora de cruzarnos en el mismo camino.",
+                "No es solo esperar a alguien, es esperar el instante exacto en que el mundo deje de ser ruido para convertirse en una melodía que solo nosotros dos sepamos bailar.",
+                "Te reconozco en los poemas que aún no he escrito y en los lugares a los que nunca he ido; porque hay ausencias que ocupan más espacio que mil presencias, y la tuya es una dulce promesa que imagino con tus ojos de zafiro.",
+                "Eres esa nota alta que le falta a mi canción favorita, el capítulo que le da sentido a todo el libro y el secreto mejor guardado que el destino tiene reservado para mí, mi niña hermosa.",
+                "Quizás no llegues mañana, ni pasado, pero mi corazón ya ha reservado un espacio donde el tiempo no existe, para que cuando llegues, sientas que siempre has estado aquí."
+            ];
+
+            const nicknames = [
+                "Amor", "Cielo", "Vida", "Princesa", "Reina", "Corazón", "Sol", "Luna", "Estrella", "Todo",
+                "Preciosa", "Hermosa", "Bella", "Niña", "Bombón", "Mundo", "Tesoro", "Luz", "Alegría", "Universo", 
+                "Pequeña", "Chaparrita", "Chica", "Galaxia", "Constelación", "Guapa", "Zafiro"
+            ];
+
+            const generateLovePhrase = () => {
+                const randomNickname = nicknames[Math.floor(Math.random() * nicknames.length)];
+                const colors = ['#ffffff', '#ffccd5', '#ff4d6d', '#fff0f3', '#c9184a', '#0077b6']; // Añadido azul zafiro
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+                return {
+                    id: Math.random(),
+                    text: randomNickname,
+                    x: Math.random() * 90 + 5,
+                    y: -10,
+                    size: Math.random() * 1.2 + 0.8,
+                    duration: Math.random() * 4 + 4,
+                    delay: Math.random() * 2,
+                    color: randomColor,
+                    shadow: `0 0 10px ${randomColor}`
+                };
+            };
+
+            useEffect(() => {
+                audioRef.current = document.getElementById('background-music');
+            }, []);
+
+            useEffect(() => {
+                let interval;
+                if (showLoveRain) {
+                    for (let i = 0; i < 40; i++) {
+                        setTimeout(() => {
+                            setLovePhrases(prev => [...prev, generateLovePhrase()]);
+                        }, i * 100);
+                    }
+                    interval = setInterval(() => {
+                        setLovePhrases(prev => [...prev, generateLovePhrase()]);
+                    }, 300);
+                } else {
+                    clearInterval(interval);
+                    setLovePhrases([]);
+                }
+                return () => clearInterval(interval);
+            }, [showLoveRain]);
+
+            const handleStartStory = () => {
+                setShowStory(true);
+                if (audioRef.current) {
+                    audioRef.current.play().catch(() => {});
+                }
+            };
+
+            return (
+                <div className="relative min-h-screen bg-black flex flex-col items-center justify-center overflow-hidden">
+                    <StarBackground />
+
+                    {!showStory && !showLoveRain ? (
+                        <div className="relative z-10 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
+                            <h1 className="text-4xl md:text-6xl font-extralight text-white mb-12 tracking-tighter italic">
+                                Como un cumulo de estrellas:3...
+                            </h1>
+                            <NeonButton onClick={handleStartStory}>
+                                Entrarrr 
+                            </NeonButton>
+                        </div>
+                    ) : showLoveRain ? (
+                        <div className="relative w-full h-screen bg-black flex items-center justify-center overflow-hidden">
+                            <div className="z-20 text-center animate-fade-in">
+                                <h2 className="text-white text-3xl font-light italic tracking-[0.2em]"> Y para mi eres..</h2>
+                            </div>
+                            {lovePhrases.map(phrase => (
+                                <span
+                                    key={phrase.id}
+                                    className="absolute font-light tracking-widest italic animate-love-fall"
+                                    style={{
+                                        left: `${phrase.x}vw`,
+                                        top: `${phrase.y}vh`,
+                                        fontSize: `${phrase.size}rem`,
+                                        animationDuration: `${phrase.duration}s`,
+                                        animationDelay: `${phrase.delay}s`,
+                                        color: phrase.color,
+                                        textShadow: phrase.shadow,
+                                        opacity: 0,
+                                        '--y-end': '110vh',
+                                    }}
+                                >
+                                    {phrase.text}
+                                </span>
+                            ))}
+                        </div>
+                    ) : (
+                        <StoryPage
+                            pageContent={storyContent[currentPage]}
+                            onNext={() => setCurrentPage(currentPage + 1)}
+                            onFinish={() => setShowLoveRain(true)}
+                            isLastPage={currentPage === storyContent.length - 1}
+                            buttonText={currentPage === storyContent.length - 1 ? "Y por fin..." : "Continuar"}
+                        />
+                    )}
+
+                    <style>{`
+                        @keyframes twinkle {
+                            0%, 100% { opacity: 0.3; transform: scale(1); }
+                            50% { opacity: 1; transform: scale(1.1); }
+                        }
+                        @keyframes fadeIn {
+                            from { opacity: 0; }
+                            to { opacity: 1; }
+                        }
+                        @keyframes fade-in-up {
+                            from { opacity: 0; transform: translateY(30px); }
+                            to { opacity: 1; transform: translateY(0); }
+                        }
+                        @keyframes flower-fall {
+                            0% { transform: translateY(-10%) rotate(0deg); opacity: 0; }
+                            10% { opacity: 0.5; }
+                            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+                        }
+                        @keyframes love-fall {
+                            0% { transform: translateY(-10vh); opacity: 0; }
+                            20% { opacity: 1; }
+                            100% { transform: translateY(var(--y-end)); opacity: 0; }
+                        }
+                        .animate-twinkle { animation: twinkle infinite ease-in-out; }
+                        .animate-fade-in { animation: fadeIn 3s ease-in-out forwards; }
+                        .animate-fade-in-up { animation: fade-in-up 1.2s ease-out forwards; }
+                        .animate-flower-fall { animation: flower-fall linear infinite; }
+                        .animate-love-fall { animation: love-fall linear forwards; }
+                    `}</style>
+                </div>
+            );
+        };
+
+        const root = createRoot(document.getElementById("root"));
+        root.render(
+            <StrictMode>
+                <App />
+            </StrictMode>
+        );
+    </script>
+</body>
+</html>
